@@ -1,0 +1,108 @@
+---
+title: Core Concepts
+description: The foundational patterns every Travo ERP integration uses — authentication, response envelopes, program types, and invoice lifecycle.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Before writing any code, understand these patterns. They apply to every endpoint.
+
+## 1. Authentication — API Key
+
+Every request carries your key in a header:
+
+```
+X-API-Key: your-api-key-here
+```
+
+A missing, unknown, inactive, or expired key returns **HTTP 401**.
+
+Your key is bound to exactly one company and one program. Everything you push belongs to that combination. If your company operates both SCF and Collection programs, you get **two keys** — one per program.
+
+## 2. Response Envelope
+
+**Every** response — success or failure — uses the same wrapper:
+
+```json
+{
+  "data": { },
+  "status": {
+    "success": true,
+    "message": "...",
+    "errorCode": 0,
+    "fieldError": {}
+  }
+}
+```
+
+<Aside type="caution">
+**Always branch on `status.success`.** Business rejections return HTTP 400 with a populated `status.message` explaining why. Never branch on the HTTP status alone.
+</Aside>
+
+Common `errorCode` values: `0` (no error), `BadRequest`, `NotFound`, `CompanyNotFound`, `InvoiceAlreadyExists`.
+
+`message` is a human-readable sentence — safe to log, safe to show to an operator, **not** a stable contract. Branch on `errorCode`, not on the message text.
+
+## 3. Two Program Types
+
+| | **SCF (Financing)** | **Collection** |
+|---|---|---|
+| Who owns the program | The **buyer** | The **supplier** |
+| Who holds the API key | The **buyer** | The **supplier** |
+| `nationalId` on each invoice identifies | The **supplier** | The **buyer** |
+| Fee/discount quote step? | Yes | No |
+| Final endpoint | `/invoices/early-payment` | `/invoices/request-to-pay` |
+| Bank financing workflow | Yes | No |
+| Result | Bank funds the invoice early | A bill is raised on the buyer |
+
+<Aside type="danger">
+**The roles are mirrored.** In a Collection program the `nationalId` you send identifies the **buyer** you are billing — not a supplier. This is the most common integration mistake.
+</Aside>
+
+### One API key = one program = one flow
+
+- You will **never** receive a mix of Collection and non-Collection invoices under one key.
+- You do **not** need per-invoice branching logic.
+- Call `GET /api/erp/me` once at startup and store the result. It makes misconfiguration obvious immediately.
+
+## 4. Invoice Lifecycle
+
+An invoice moves through these stages:
+
+| `stage` | Meaning |
+|---|---|
+| `NoFinancingRequest` | Invoice registered. No payment request raised yet. |
+| `AwaitingBuyer` | Payment request raised, waiting for the buyer. |
+| `AwaitingBank` | Buyer approved; waiting for the bank. |
+| `BankApproved` | Bank approved; disbursement executing. |
+| `Disbursed` | Funds paid out. |
+| `Rejected` | Request rejected. |
+
+<Aside type="tip">
+**`stage` is a fixed, machine-readable enum — build your logic on it.** `orderStatus` and `nextActionBy` are free-text display hints that change with workflow configuration; use them for humans, never in an `if`.
+</Aside>
+
+## 5. Batches Are Not Atomic
+
+The bulk create, early-payment request, and request-to-pay endpoints all process rows **independently**. A failing row is reported in place and never drops the rest. Always reconcile per row.
+
+## 6. Idempotency
+
+- **Invoice create:** `number` is the idempotency key (unique per company). Re-sending the same number returns `Duplicate`, nothing is duplicated.
+- **Request to pay:** A second call on an already-processing invoice is refused with a reason in `reason`. It does not raise a second bill.
+- **Invoice update/delete:** Safe to retry — the token identifies the invoice deterministically.
+
+## 7. JSON Conventions
+
+- **Casing:** camelCase in both directions.
+- **Dates:** ISO-8601 format, e.g. `2026-07-01T00:00:00`.
+- **GUIDs:** Lowercase with dashes, e.g. `6f1c2a3b-4d5e-6f7a-8b9c-0d1e2f3a4b5c`.
+- **Content-Type:** Always `application/json` unless otherwise noted.
+
+## Next Steps
+
+<Steps>
+1. [Configure the portal](/getting-started/configure/) with your Base URL and API key.
+2. [Make your first call](/getting-started/first-call/) to verify the connection.
+3. Dive into the [API Reference](/reference/) for full endpoint details.
+</Steps>

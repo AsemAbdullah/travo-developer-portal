@@ -1,0 +1,36 @@
+---
+title: Request to Pay (Collection) — Overview
+description: The Collection flow — bill the buyer directly with no bank involvement.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Collection Flow Overview
+
+Request to Pay is for **Collection program keys** only. A bill is raised directly against the buyer — no bank approval, no fee calculation, no financing workflow.
+
+```
+POST /api/erp/invoices/bulk           → push invoices (nationalId = BUYER)
+                │
+POST /api/erp/invoices/request-to-pay → bill raised on the buyer
+                │
+POST /api/erp/invoices/status         → track the invoice
+```
+
+## Compared to SCF
+
+| | **SCF (Early Payment)** | **Collection (Request to Pay)** |
+|---|---|---|
+| Steps | bulk → details → early-payment | bulk → request-to-pay |
+| Fee quote? | Yes | No |
+| Bank approval? | Yes | No |
+| `nationalId` identifies | Supplier | **Buyer** |
+| Buyer/bank account needed on payment call? | Yes | No (resolved server-side) |
+
+<Aside type="danger">
+In Collection, the roles are **mirrored**. The `nationalId` on each invoice identifies the **buyer** you are billing — not a supplier.
+</Aside>
+
+## Idempotency
+
+A second `request-to-pay` call on an invoice that is already being processed (or already paid) is refused with a reason. It does **not** raise a second bill. Only retry rows that returned `Failed`, and only after reading the `reason`.

@@ -1,0 +1,100 @@
+---
+title: API Reference — Introduction
+description: Overview of the Travo ERP API surface, base URLs, authentication, and common patterns.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Base URL
+
+All endpoints are relative to your Travo environment's base URL:
+
+```
+https://<your-travo-host>/api/erp/...
+```
+
+Your Base URL is provided by Travo per environment (sandbox, staging, production).
+
+## Authentication
+
+Every request must include the API key header:
+
+```
+X-API-Key: your-api-key-here
+```
+
+See [Authentication](/reference/authentication/) for details.
+
+## Endpoint Catalog
+
+### Discovery
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | [`/api/erp/me`](/reference/me/) | Describe your API key — company, program, and which flow to use |
+
+### Invoices
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | [`/api/erp/invoices/bulk`](/reference/invoices-bulk/) | Push invoices (bulk create) |
+| `POST` | [`/api/erp/invoices/update`](/reference/invoices-update/) | Patch an invoice |
+| `POST` | [`/api/erp/invoices/delete`](/reference/invoices-delete/) | Soft-delete an invoice |
+| `POST` | [`/api/erp/invoices/status`](/reference/invoices-status/) | Get invoice status and stage |
+
+### Early Payment (SCF keys only)
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | [`/api/erp/invoices/early-payment/details`](/reference/early-payment-details/) | Get a fee/discount quote |
+| `POST` | [`/api/erp/invoices/early-payment`](/reference/early-payment-request/) | Submit the financing request |
+
+### Request to Pay (Collection keys only)
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | [`/api/erp/invoices/request-to-pay`](/reference/request-to-pay-submit/) | Raise a bill on the buyer |
+
+### Bank Accounts & Lookups
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | [`/api/erp/bank-accounts`](/reference/bank-accounts/) | List bank accounts |
+| `POST` | [`/api/erp/Create/bank-account`](/reference/bank-accounts-create/) | Add a bank account |
+| `GET` | [`/Lookups/Banks`](/reference/lookups/) | List available banks |
+| `GET` | [`/Lookups/Programs`](/reference/lookups/) | List joined programs |
+
+## Full Flows — Side by Side
+
+### SCF Key (Financing)
+
+```
+GET  /api/erp/me                              → nextAction: "early-payment"
+POST /api/erp/invoices/bulk                   → nationalId = SUPPLIER   → tokens
+POST /api/erp/invoices/early-payment/details  → fee breakdown
+POST /api/erp/invoices/early-payment          → bank funds the invoice
+POST /api/erp/invoices/status                 → track the invoice
+```
+
+### Collection Key
+
+```
+GET  /api/erp/me                              → nextAction: "request-to-pay"
+POST /api/erp/invoices/bulk                   → nationalId = BUYER      → tokens
+POST /api/erp/invoices/request-to-pay         → bill raised on the buyer
+POST /api/erp/invoices/status                 → track the invoice
+```
+
+## HTTP Status Codes
+
+| Code | Meaning |
+|---|---|
+| `200` | Success — but always check `status.success` in the body |
+| `400` | Validation or business failure — read `status.message` |
+| `401` | Missing, invalid, or expired API key |
+| `404` | Resource not found (invoice token, etc.) |
+| `429` | Rate limit exceeded — back off and retry |
+
+<Aside type="caution">
+A `200` does **not** guarantee success for batch operations. Individual rows may fail — always inspect each row's `status` and `reason`.
+</Aside>

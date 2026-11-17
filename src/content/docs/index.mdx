@@ -1,0 +1,72 @@
+---
+title: Travo ERP API Portal
+description: Integrate your ERP system with Travo — push invoices, request financing, collect payments, and track everything through one API.
+template: splash
+hero:
+  tagline: Connect your ERP to Travo's supply-chain financing and collections platform. Push invoices, request early payment, bill buyers — all through a single REST API.
+  actions:
+    - text: Get Started
+      link: /getting-started/core-concepts/
+      icon: right-arrow
+      variant: primary
+    - text: API Reference
+      link: /reference/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What you can do
+
+<CardGrid stagger>
+  <Card title="Push Invoices" icon="document">
+    Send invoices in bulk from your ERP. Each invoice is validated, stored, and ready for the next step — financing or collection.
+  </Card>
+  <Card title="Request Early Payment (SCF)" icon="rocket">
+    Get a fee quote and submit a financing request. The bank funds the invoice early; you receive the net amount.
+  </Card>
+  <Card title="Bill the Buyer (Collection)" icon="list-format">
+    Raise a bill directly against the buyer — no bank approval, no fee calculation. The buyer pays on the due date.
+  </Card>
+  <Card title="Track Everything" icon="magnifier">
+    Follow every invoice from creation to disbursement with a single status call. Machine-readable stages drive your ERP logic.
+  </Card>
+</CardGrid>
+
+## Two program types, one API
+
+Your API key determines which flow applies. You never choose per request.
+
+| | **SCF (Financing)** | **Collection** |
+|---|---|---|
+| Program owner | Buyer | Supplier |
+| API key holder | Buyer | Supplier |
+| `nationalId` on each invoice | Supplier | Buyer |
+| Fee quote step? | Yes | No |
+| Final endpoint | `/invoices/early-payment` | `/invoices/request-to-pay` |
+| Bank approval workflow? | Yes | No |
+
+Not sure which one you have? Call [`GET /api/erp/me`](/reference/me/) — it tells you.
+
+## How it works
+
+```
+GET  /api/erp/me                              → discover your program type
+POST /api/erp/invoices/bulk                   → push invoices
+POST /api/erp/invoices/early-payment/details  → get fee quote (SCF only)
+POST /api/erp/invoices/early-payment          → submit financing (SCF)
+POST /api/erp/invoices/request-to-pay         → bill the buyer (Collection)
+POST /api/erp/invoices/status                 → track the invoice
+POST /api/erp/invoices/update                 → patch an invoice
+POST /api/erp/invoices/delete                 → soft-delete an invoice
+GET  /api/erp/bank-accounts                   → list bank accounts
+POST /api/erp/Create/bank-account             → add a bank account
+GET  /Lookups/Banks                           → list available banks
+GET  /Lookups/Programs                        → list joined programs
+```
+
+## Security
+
+Every request requires an `X-API-Key` header. Keys are issued per company, per program. A missing, unknown, inactive, or expired key returns `401`.
+
+Everything in this portal runs locally in your browser — API keys and responses are never sent to Travo's documentation servers.

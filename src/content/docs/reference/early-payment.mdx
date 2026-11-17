@@ -1,0 +1,40 @@
+---
+title: Early Payment (SCF) — Overview
+description: How the SCF financing flow works — get a fee quote, then submit a financing request.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## SCF Flow Overview
+
+Early Payment is for **SCF (financing) program keys** only. The bank funds the invoice before its due date; the supplier receives the net amount after fees.
+
+```
+POST /api/erp/invoices/bulk             → push invoices (tokens returned)
+                │
+POST /api/erp/invoices/early-payment/details  → fee quote
+                │
+POST /api/erp/invoices/early-payment    → submit financing request
+                │
+POST /api/erp/invoices/status           → track: AwaitingBuyer → AwaitingBank → Disbursed
+```
+
+## Endpoints
+
+| Step | Endpoint | Description |
+|---|---|---|
+| 1 | [`POST /invoices/bulk`](/reference/invoices-bulk/) | Push invoices |
+| 2 | [`POST /invoices/early-payment/details`](/reference/early-payment-details/) | Get fee breakdown per invoice |
+| 3 | [`POST /invoices/early-payment`](/reference/early-payment-request/) | Submit the financing request |
+| 4 | [`POST /invoices/status`](/reference/invoices-status/) | Track until `Disbursed` |
+
+## Key Concepts
+
+- **One order per invoice** — the financing request mints an order per invoice, not per batch.
+- **Bank account required** — the supplier must have an Active bank account before a quote can be produced.
+- **Buyer approval** — after you submit, the buyer must approve. This happens through the Travo portal or the MP API (not the ERP API).
+- **Fee transparency** — the quote shows `amountToReceive`, `totalFees`, `totalDays`, and an HTML terms document.
+
+<Aside type="caution">
+If your API key is bound to a **Collection** program, calling the early-payment endpoints returns `400` with: *"This API key is linked to a Collection program. Use POST /api/erp/invoices/request-to-pay instead."*
+</Aside>

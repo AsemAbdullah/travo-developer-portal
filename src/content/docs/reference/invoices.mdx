@@ -1,0 +1,60 @@
+---
+title: Invoices — Overview
+description: Overview of invoice operations — create, update, delete, and track invoices through the Travo ERP API.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Invoice Lifecycle
+
+```
+invoices/bulk  ──►  Created
+                       │
+            ┌──────────┼──────────┐
+            ▼          ▼          ▼
+     early-payment  request-to-pay  (stay as-is)
+            │          │
+            ▼          ▼
+    invoices/status ◄──┘
+```
+
+## Available Operations
+
+| Endpoint | Description |
+|---|---|
+| [`POST /api/erp/invoices/bulk`](/reference/invoices-bulk/) | Push one or more invoices |
+| [`POST /api/erp/invoices/update`](/reference/invoices-update/) | Patch an existing invoice |
+| [`POST /api/erp/invoices/delete`](/reference/invoices-delete/) | Soft-delete an invoice |
+| [`POST /api/erp/invoices/status`](/reference/invoices-status/) | Get current status and stage |
+
+## Common Rules
+
+### Batches Are Not Atomic
+
+The bulk create endpoint processes each invoice **independently**. A failing row is reported in place and never drops the rest. Always reconcile per row using `number` or `token`.
+
+### Idempotency
+
+`number` is the idempotency key — unique per company. Re-sending the same number returns `Duplicate`, nothing is duplicated. This makes retries safe after a timeout.
+
+### When Update and Delete Are Refused
+
+Both share one gate. These states block changes:
+
+| State | Message |
+|---|---|
+| Invoice status `Rejected` | `A rejected invoice cannot be updated/deleted.` |
+| Invoice status `Paid` | `A paid invoice cannot be updated/deleted.` |
+| Bill already raised (`request-to-pay`) | `This invoice was already billed to the buyer...` |
+| Payment request is live | `A payment request is already in progress...` |
+
+<Aside type="tip">
+**Exception:** A sent-back invoice with a live order **can** be deleted (not updated). The delete cancels the order and stands its workflow tasks down. See the [Delete](/reference/invoices-delete/) endpoint.
+</Aside>
+
+### Attachments
+
+- At least one attachment is **required** on create.
+- `base64Content` must be valid base64 or the row fails.
+- Allowed file types are enforced server-side.
+- On update, attachments are **added** by default. Set `replaceAttachments: true` to archive existing ones.
