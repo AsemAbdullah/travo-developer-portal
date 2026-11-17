@@ -11,28 +11,27 @@ Build any request, see the wire body and cURL command, and fire it at your Credi
   <h4>API Playground</h4>
 
   <div class="field-group">
-    <div style="display:flex;gap:0.5rem;align-items:end;">
-      <div style="width:120px;">
-        <label for="pg-method">Method</label>
-        <select id="pg-method">
-          <option value="GET">GET</option>
-          <option value="POST" selected>POST</option>
-          <option value="PUT">PUT</option>
-          <option value="PATCH">PATCH</option>
-          <option value="DELETE">DELETE</option>
-        </select>
-      </div>
-      <div style="flex:1;">
-        <label for="pg-path">Path</label>
-        <input type="text" id="pg-path" placeholder="/api/erp/me" value="/api/erp/me" />
-      </div>
-    </div>
-
-    <div>
-      <label for="pg-body">Request Body (JSON)</label>
-      <textarea id="pg-body" placeholder="Enter JSON body here"></textarea>
-    </div>
-  </div>
+<div style="display:flex;gap:0.5rem;align-items:end;">
+<div style="width:120px;">
+<label for="pg-method">Method</label>
+<select id="pg-method">
+<option value="GET">GET</option>
+<option value="POST" selected>POST</option>
+<option value="PUT">PUT</option>
+<option value="PATCH">PATCH</option>
+<option value="DELETE">DELETE</option>
+</select>
+</div>
+<div style="flex:1;">
+<label for="pg-path">Path</label>
+<input type="text" id="pg-path" placeholder="/api/erp/me" value="/api/erp/me" />
+</div>
+</div>
+<div>
+<label for="pg-body">Request Body (JSON)</label>
+<textarea id="pg-body" placeholder="Enter JSON body here"></textarea>
+</div>
+</div>
 
   <div class="btn-row">
     <button class="btn-primary" id="pg-send">Send Request</button>

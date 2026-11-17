@@ -55,12 +55,12 @@ Call `GET /api/erp/me` once at startup and log the result. If it returns `401`, 
 
 ## Inbound Key Exchange
 
-If you host your own ERP endpoint (e.g., Odoo) and CreditPlus needs to call back into it, the [inbound key handshake](/reference/me/) lets the two systems exchange credentials directly:
+If you host your own ERP endpoint (e.g., Odoo) and CreditPlus needs to call back into it, the [inbound key handshake](/reference/inbound-key/) lets the two systems exchange credentials directly:
 
 ```
 POST /api/erp/inbound-key
 {
-  "erpApiKey": "<key-for-travo-to-call-you>",
+  "erpApiKey": "<key-for-creditplus-to-call-you>",
   "erpEndpointUrl": "https://your-erp.example.com/api/erp/odoo/invoices"
 }
 ```

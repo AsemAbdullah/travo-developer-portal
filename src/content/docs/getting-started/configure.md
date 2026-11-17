@@ -11,7 +11,7 @@ Enter these in the configuration panel below:
 
 | Setting | Where to get it | Stored in |
 |---|---|---|
-| **Base URL** | CreditPlus gives you a per-environment URL, e.g. `https://api.travo.example.com` | `localStorage` (persists across tabs) |
+| **Base URL** | CreditPlus gives you a per-environment URL, e.g. `https://api.creditplus.example.com` | `localStorage` (persists across tabs) |
 | **API Key** | Issued by CreditPlus per company, per program | `localStorage` |
 
 > **Tip:** Your API key is stored **only in your browser** — it is never sent to CreditPlus's documentation servers. The "Try it" consoles call your CreditPlus API directly from the browser.
@@ -23,7 +23,7 @@ Enter these in the configuration panel below:
   <div class="field-group">
     <div>
       <label for="cfg-base-url">Base URL</label>
-      <input type="url" id="cfg-base-url" placeholder="https://api.travo.example.com" />
+      <input type="url" id="cfg-base-url" placeholder="https://api.creditplus.example.com" />
     </div>
     <div>
       <label for="cfg-api-key">API Key (X-API-Key)</label>

@@ -8,13 +8,10 @@ export default defineConfig({
       description: 'Developer portal for integrating your ERP system with CreditPlus — supply-chain financing & collections.',
       logo: {
         light: './src/assets/logo-light.png',
-        dark: './src/assets/logo-dark.png',
+        dark: './src/assets/logo-dark.svg',
         replacesTitle: false,
       },
       favicon: '/favicon.png',
-      social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/Mathkour/travo-developer-portal' },
-      ],
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {
