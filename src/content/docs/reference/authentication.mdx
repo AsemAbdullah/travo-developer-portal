@@ -1,13 +1,13 @@
 ---
 title: Authentication — API Key
-description: How to authenticate with the Travo ERP API using X-API-Key header.
+description: How to authenticate with the CreditPlus ERP API using X-API-Key header.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-The Travo ERP API uses **API key authentication**. Every request must include this header:
+The CreditPlus ERP API uses **API key authentication**. Every request must include this header:
 
 ```
 X-API-Key: your-api-key-here
@@ -17,7 +17,7 @@ X-API-Key: your-api-key-here
 
 | Property | Detail |
 |---|---|
-| **Issued by** | Travo, per company, per program |
+| **Issued by** | CreditPlus, per company, per program |
 | **Scope** | One key = one company + one program |
 | **Expiration** | Keys have an `ExpireDate`. An expired key returns `401`. |
 | **Rate limiting** | Requests are rate-limited per key. Exceeding the limit returns `429`. |
@@ -38,8 +38,8 @@ If your company operates both program types, you receive **two separate keys**.
 |---|---|---|
 | `401` | Missing header | Add `X-API-Key` to every request |
 | `401` | Unknown key | Verify you're using the correct key for the environment |
-| `401` | Expired key | Contact Travo to renew your key |
-| `401` | Inactive key | Your key was deactivated — contact Travo |
+| `401` | Expired key | Contact CreditPlus to renew your key |
+| `401` | Inactive key | Your key was deactivated — contact CreditPlus |
 | `429` | Rate limit hit | Back off (exponential backoff recommended) |
 
 <Aside type="tip">
@@ -50,12 +50,12 @@ Call `GET /api/erp/me` once at startup and log the result. If it returns `401`, 
 
 1. **Never commit your API key** to version control. Use environment variables or a secret manager.
 2. **Use separate keys** for sandbox and production.
-3. **Rotate keys** periodically — coordinate with Travo to issue a new key and deprecate the old one.
+3. **Rotate keys** periodically — coordinate with CreditPlus to issue a new key and deprecate the old one.
 4. **Always use HTTPS** — never send your key over unencrypted HTTP.
 
 ## Inbound Key Exchange
 
-If you host your own ERP endpoint (e.g., Odoo) and Travo needs to call back into it, the [inbound key handshake](/reference/me/) lets the two systems exchange credentials directly:
+If you host your own ERP endpoint (e.g., Odoo) and CreditPlus needs to call back into it, the [inbound key handshake](/reference/me/) lets the two systems exchange credentials directly:
 
 ```
 POST /api/erp/inbound-key
@@ -65,4 +65,4 @@ POST /api/erp/inbound-key
 }
 ```
 
-This stores the key Travo will present when pulling invoices from your system.
+This stores the key CreditPlus will present when pulling invoices from your system.

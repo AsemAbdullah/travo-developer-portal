@@ -3,7 +3,7 @@ title: Configure the Portal
 description: Set up your connection details so the portal's interactive "Try it" consoles can make live API calls.
 ---
 
-The portal's "Try it" consoles let you build requests and fire them at your Travo environment directly from the browser. Before you can use them, tell the portal where to send requests and how to authenticate.
+The portal's "Try it" consoles let you build requests and fire them at your CreditPlus environment directly from the browser. Before you can use them, tell the portal where to send requests and how to authenticate.
 
 ## Connection Settings
 
@@ -11,10 +11,10 @@ Enter these in the configuration panel below:
 
 | Setting | Where to get it | Stored in |
 |---|---|---|
-| **Base URL** | Travo gives you a per-environment URL, e.g. `https://api.travo.example.com` | `localStorage` (persists across tabs) |
-| **API Key** | Issued by Travo per company, per program | `localStorage` |
+| **Base URL** | CreditPlus gives you a per-environment URL, e.g. `https://api.travo.example.com` | `localStorage` (persists across tabs) |
+| **API Key** | Issued by CreditPlus per company, per program | `localStorage` |
 
-> **Tip:** Your API key is stored **only in your browser** — it is never sent to Travo's documentation servers. The "Try it" consoles call your Travo API directly from the browser.
+> **Tip:** Your API key is stored **only in your browser** — it is never sent to CreditPlus's documentation servers. The "Try it" consoles call your CreditPlus API directly from the browser.
 
 ## Configure
 

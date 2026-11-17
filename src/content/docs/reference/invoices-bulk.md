@@ -1,6 +1,6 @@
 ---
 title: Create Invoices (Bulk)
-description: Push one or more invoices from your ERP into Travo. Each invoice is validated independently.
+description: Push one or more invoices from your ERP into CreditPlus. Each invoice is validated independently.
 ---
 
 <div class="endpoint-badge">
@@ -91,7 +91,7 @@ Pushes invoices from your ERP. One call carries **N invoices**, each validated i
 | `nextAction` | string | Batch-level hint: `request-to-pay`, `early-payment`, or `none` |
 | `results[].number` | string | The invoice number you sent |
 | `results[].status` | string | `Created`, `Duplicate`, or `Failed` |
-| `results[].token` | GUID? | Travo's invoice identifier. `null` on failure. |
+| `results[].token` | GUID? | CreditPlus's invoice identifier. `null` on failure. |
 | `results[].nextAction` | string? | Per-invoice hint. Omitted on failure. |
 | `results[].reason` | string? | Why it failed. `null` on success. |
 

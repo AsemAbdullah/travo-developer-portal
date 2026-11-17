@@ -10,7 +10,7 @@ description: List available banks and joined programs.
   <span>/Lookups/Banks</span>
 </div>
 
-Returns the list of banks subscribed to Travo. Use the returned `id` as `bankToken` when creating a bank account.
+Returns the list of banks subscribed to CreditPlus. Use the returned `id` as `bankToken` when creating a bank account.
 
 ```bash
 curl -X GET "https://<host>/Lookups/Banks" \

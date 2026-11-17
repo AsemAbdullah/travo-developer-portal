@@ -1,9 +1,9 @@
 ---
 title: API Playground
-description: A free-form scratchpad to build and test API requests against your Travo environment.
+description: A free-form scratchpad to build and test API requests against your CreditPlus environment.
 ---
 
-Build any request, see the wire body and cURL command, and fire it at your Travo environment.
+Build any request, see the wire body and cURL command, and fire it at your CreditPlus environment.
 
 > **Tip:** Make sure you've [configured](/getting-started/configure/) your Base URL and API Key first.
 

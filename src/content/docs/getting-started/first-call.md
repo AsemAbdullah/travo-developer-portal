@@ -73,7 +73,7 @@ No request body. The API key in the header is all you need.
       responseText.textContent = JSON.stringify(json, null, 2);
     } catch (e) {
       responseText.className = 'response-panel error';
-      responseText.textContent = 'Request failed: ' + e.message + '\n\nIf you see a CORS error, your Travo server may need to allow this portal\'s origin.';
+      responseText.textContent = 'Request failed: ' + e.message + '\n\nIf you see a CORS error, your CreditPlus server may need to allow this portal\'s origin.';
     }
   });
 }

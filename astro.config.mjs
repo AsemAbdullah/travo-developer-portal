@@ -4,13 +4,14 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   integrations: [
     starlight({
-      title: 'Travo ERP API',
-      description: 'Developer portal for integrating your ERP system with Travo — supply-chain financing & collections.',
+      title: 'CreditPlus ERP API',
+      description: 'Developer portal for integrating your ERP system with CreditPlus — supply-chain financing & collections.',
       logo: {
-        light: './src/assets/logo-light.svg',
-        dark: './src/assets/logo-dark.svg',
+        light: './src/assets/logo-light.png',
+        dark: './src/assets/logo-dark.png',
         replacesTitle: false,
       },
+      favicon: '/favicon.png',
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/Mathkour/travo-developer-portal' },
       ],
@@ -34,6 +35,7 @@ export default defineConfig({
               items: [
                 { label: 'API Key', slug: 'reference/authentication' },
                 { label: 'GET /me', slug: 'reference/me' },
+                { label: 'Inbound Key', slug: 'reference/inbound-key' },
               ],
             },
             {

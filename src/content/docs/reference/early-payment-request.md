@@ -51,7 +51,7 @@ Submits a financing request for one or more invoices. The bank reviews and funds
 
 The invoice enters the approval workflow:
 
-1. **`AwaitingBuyer`** — the buyer must approve (through the Travo portal or MP API).
+1. **`AwaitingBuyer`** — the buyer must approve (through the CreditPlus portal or MP API).
 2. **`AwaitingBank`** — the bank reviews the request.
 3. **`BankApproved`** → **`Disbursed`** — funds are paid out.
 
